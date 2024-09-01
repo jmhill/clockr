@@ -1,4 +1,11 @@
-type UserId = string;
+import {
+  getUserActiveTimeBlock,
+  getUserLoggedTimeBlocks,
+  logTimeBlockEntry,
+  setUserActiveTimeBlock,
+} from "./time_block_store.ts";
+import { type UserId } from "./user.ts";
+
 type TimeBlockId = string;
 
 export interface ActiveTimeBlock {
@@ -18,47 +25,6 @@ export interface ClockInResult {
 
 export interface ClockOutResult {
   timeBlock: LoggedTimeBlock;
-}
-
-// Time Block Store
-
-const activeBlocks: Map<UserId, ActiveTimeBlock> = new Map();
-const loggedBlocks: Map<UserId, LoggedTimeBlock[]> = new Map();
-
-function getUserActiveTimeBlock(userId: UserId): ActiveTimeBlock | null {
-  const block = activeBlocks.get(userId);
-  return block || null;
-}
-
-function setUserActiveTimeBlock(
-  userId: UserId,
-  timeBlock: ActiveTimeBlock,
-): ActiveTimeBlock {
-  activeBlocks.set(userId, timeBlock);
-  return timeBlock;
-}
-
-export function clearActiveTimeBlocks() {
-  activeBlocks.clear();
-}
-
-export function getUserLoggedTimeBlocks(userId: UserId) {
-  const blocks = loggedBlocks.get(userId);
-  return blocks || null;
-}
-
-export function deleteAllUserLoggedTimeBlocks(userId: UserId) {
-  loggedBlocks.delete(userId);
-}
-
-function logTimeBlockEntry(loggedTime: LoggedTimeBlock) {
-  const userId = loggedTime.userId;
-  const logs = loggedBlocks.get(userId);
-  if (logs) {
-    logs.push(loggedTime);
-  } else {
-    loggedBlocks.set(userId, [loggedTime]);
-  }
 }
 
 // Clocking In and Out
