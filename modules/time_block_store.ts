@@ -1,16 +1,40 @@
 import { ActiveTimeBlock, LoggedTimeBlock } from "./clock_actions.ts";
 import { type UserId } from "./user.ts";
-// Time Block Store
+
+export interface TimeBlockStore {
+  getUserActiveTimeBlock: (userId: UserId) => ActiveTimeBlock | null;
+  setUserActiveTimeBlock: (
+    userId: UserId,
+    timeBlock: ActiveTimeBlock,
+  ) => ActiveTimeBlock;
+  clearUserActiveTimeBlock: (userId: UserId) => void;
+  clearAllActiveTimeBlocks: () => void;
+  getUserLoggedTimeBlocks: (userId: UserId) => LoggedTimeBlock[] | null;
+  deleteAllUserLoggedTimeBlocks: (userId: UserId) => void;
+  logTimeBlockEntry: (loggedTimeBlock: LoggedTimeBlock) => void;
+}
+
+// In-Memory Time Block Store
 
 const activeBlocks: Map<UserId, ActiveTimeBlock> = new Map();
 const loggedBlocks: Map<UserId, LoggedTimeBlock[]> = new Map();
 
-export function getUserActiveTimeBlock(userId: UserId): ActiveTimeBlock | null {
+export const InMemoryStore: TimeBlockStore = {
+  getUserActiveTimeBlock,
+  setUserActiveTimeBlock,
+  clearUserActiveTimeBlock,
+  clearAllActiveTimeBlocks: clearActiveTimeBlocks,
+  getUserLoggedTimeBlocks,
+  deleteAllUserLoggedTimeBlocks,
+  logTimeBlockEntry,
+};
+
+function getUserActiveTimeBlock(userId: UserId): ActiveTimeBlock | null {
   const block = activeBlocks.get(userId);
   return block || null;
 }
 
-export function setUserActiveTimeBlock(
+function setUserActiveTimeBlock(
   userId: UserId,
   timeBlock: ActiveTimeBlock,
 ): ActiveTimeBlock {
@@ -18,24 +42,24 @@ export function setUserActiveTimeBlock(
   return timeBlock;
 }
 
-export function clearUserActiveTimeBlock(userId: UserId) {
+function clearUserActiveTimeBlock(userId: UserId) {
   activeBlocks.delete(userId);
 }
 
-export function clearActiveTimeBlocks() {
+function clearActiveTimeBlocks() {
   activeBlocks.clear();
 }
 
-export function getUserLoggedTimeBlocks(userId: UserId) {
+function getUserLoggedTimeBlocks(userId: UserId) {
   const blocks = loggedBlocks.get(userId);
   return blocks || null;
 }
 
-export function deleteAllUserLoggedTimeBlocks(userId: UserId) {
+function deleteAllUserLoggedTimeBlocks(userId: UserId) {
   loggedBlocks.delete(userId);
 }
 
-export function logTimeBlockEntry(loggedTime: LoggedTimeBlock) {
+function logTimeBlockEntry(loggedTime: LoggedTimeBlock) {
   const userId = loggedTime.userId;
   const logs = loggedBlocks.get(userId);
   if (logs) {

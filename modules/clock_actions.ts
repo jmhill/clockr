@@ -1,12 +1,7 @@
-import {
-  getUserActiveTimeBlock,
-  getUserLoggedTimeBlocks,
-  logTimeBlockEntry,
-  setUserActiveTimeBlock,
-} from "./time_block_store.ts";
+import { type TimeBlockStore } from "./time_block_store.ts";
 import { type UserId } from "./user.ts";
 
-type TimeBlockId = string;
+export type TimeBlockId = string;
 
 export interface ActiveTimeBlock {
   timeBlockId: TimeBlockId;
@@ -27,39 +22,71 @@ export interface ClockOutResult {
   timeBlock: LoggedTimeBlock;
 }
 
+type ClockInAction = (userId: UserId) => ClockInResult;
+type ClockOutAction = (userId: UserId) => ClockOutResult | null;
+type GetAllTimeBlocksQuery = (userId: UserId) => LoggedTimeBlock[] | null;
+
+interface ClockActions {
+  clockIn: ClockInAction;
+  clockOut: ClockOutAction;
+  getAllLoggedBlocks: GetAllTimeBlocksQuery;
+}
+
+type ClockActionsInit = (timeBlockStore: TimeBlockStore) => ClockActions;
+
 // Clocking In and Out
+type InitClockIn = (timeBlockStore: TimeBlockStore) => ClockInAction;
+type InitClockOut = (timeBlockStore: TimeBlockStore) => ClockOutAction;
+type InitGetAllLoggedBlocks = (
+  timeBlockStore: TimeBlockStore,
+) => GetAllTimeBlocksQuery;
 
-export function clockIn(userId: UserId): ClockInResult {
-  const currentUserActiveTimeBlock = getUserActiveTimeBlock(userId);
+const clockIn: InitClockIn =
+  (timeBlockStore: TimeBlockStore) => (userId: UserId) => {
+    const { getUserActiveTimeBlock, setUserActiveTimeBlock } = timeBlockStore;
+    const currentUserActiveTimeBlock = getUserActiveTimeBlock(userId);
 
-  if (currentUserActiveTimeBlock === null) {
-    const newBlock = {
-      timeBlockId: "1",
-      userId,
-      startTime: Date.now(),
-    };
-    setUserActiveTimeBlock(userId, newBlock);
-    return { result: "new", timeBlock: newBlock };
-  }
+    if (currentUserActiveTimeBlock === null) {
+      const newBlock = {
+        timeBlockId: "1",
+        userId,
+        startTime: Date.now(),
+      };
+      setUserActiveTimeBlock(userId, newBlock);
+      return { result: "new", timeBlock: newBlock } as ClockInResult;
+    }
 
-  return { result: "existing", timeBlock: currentUserActiveTimeBlock };
-}
-
-export function clockOut(userId: UserId): ClockOutResult | null {
-  const activeBlock = getUserActiveTimeBlock(userId);
-
-  if (activeBlock === null) {
-    return null;
-  }
-
-  const result: ClockOutResult = {
-    timeBlock: { ...activeBlock, endTime: Date.now() },
+    return {
+      result: "existing",
+      timeBlock: currentUserActiveTimeBlock,
+    } as ClockInResult;
   };
-  logTimeBlockEntry(result.timeBlock);
-  return result;
-}
 
-export function getAllTimeBlocksForUser(userId: UserId) {
-  const blocks = getUserLoggedTimeBlocks(userId);
-  return blocks;
-}
+const clockOut: InitClockOut =
+  (timeBlockStore: TimeBlockStore) => (userId: UserId) => {
+    const { getUserActiveTimeBlock, logTimeBlockEntry } = timeBlockStore;
+    const activeBlock = getUserActiveTimeBlock(userId);
+
+    if (activeBlock === null) {
+      return null;
+    }
+
+    const result: ClockOutResult = {
+      timeBlock: { ...activeBlock, endTime: Date.now() },
+    };
+    logTimeBlockEntry(result.timeBlock);
+    return result;
+  };
+
+const getAllTimeBlocksForUser: InitGetAllLoggedBlocks =
+  (timeBlockStore: TimeBlockStore) => (userId: UserId) => {
+    const { getUserLoggedTimeBlocks } = timeBlockStore;
+    const blocks = getUserLoggedTimeBlocks(userId);
+    return blocks;
+  };
+
+export const init: ClockActionsInit = (timeBlockStore) => ({
+  clockIn: clockIn(timeBlockStore),
+  clockOut: clockOut(timeBlockStore),
+  getAllLoggedBlocks: getAllTimeBlocksForUser(timeBlockStore),
+});

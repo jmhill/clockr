@@ -1,11 +1,12 @@
 import { beforeEach, describe, test } from "jsr:@std/testing/bdd";
 import { expect } from "jsr:@std/expect";
 
-import { clockIn, clockOut, getAllTimeBlocksForUser } from "./clock_actions.ts";
-import {
-  clearUserActiveTimeBlock,
-  deleteAllUserLoggedTimeBlocks,
-} from "./time_block_store.ts";
+import { init } from "./clock_actions.ts";
+import { InMemoryStore } from "./time_block_store.ts";
+
+const { clockIn, clockOut, getAllLoggedBlocks } = init(InMemoryStore);
+const { clearUserActiveTimeBlock, deleteAllUserLoggedTimeBlocks } =
+  InMemoryStore;
 
 describe("clockIn", () => {
   const userId = "1";
@@ -62,7 +63,7 @@ describe("getAllTimeBlocksForUser", () => {
   beforeEach(() => deleteAllUserLoggedTimeBlocks(userId));
 
   test("returns null if no logged blocks for user", () => {
-    const logged = getAllTimeBlocksForUser(userId);
+    const logged = getAllLoggedBlocks(userId);
 
     expect(logged).toBe(null);
   });
@@ -73,7 +74,7 @@ describe("getAllTimeBlocksForUser", () => {
     clockIn(userId);
     clockOut(userId);
 
-    const logged = getAllTimeBlocksForUser(userId);
+    const logged = getAllLoggedBlocks(userId);
     expect(logged?.length).toBe(2);
   });
 });
