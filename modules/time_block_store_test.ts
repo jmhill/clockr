@@ -2,19 +2,16 @@ import { describe, test } from "jsr:@std/testing/bdd";
 import { expect } from "jsr:@std/expect";
 
 import { InMemoryStore } from "./time_block_store.ts";
-import { ActiveTimeBlock } from "./clock_actions.ts";
+import { type ActiveTimeBlock, createActiveTimeBlock } from "./time_block.ts";
+import { createUserId } from "./user.ts";
 
-const { setUserActiveTimeBlock } = InMemoryStore;
+const { setUserActiveTimeBlock, getUserActiveTimeBlock } = InMemoryStore;
 
-// describe("in-memory store active time block", () => {
-//   test("adds item to store if no active block", () => {
-//     const userId = "1";
-//     // TODO: need timeblock creation helper
-//     // const timeBlock : ActiveTimeBlock = {
-//     //   userId,
-//     //   startTime: Date.now()
-//     // }
-//     const stored = setUserActiveTimeBlock(userId);
-//     console.log(stored);
-//   });
-// });
+describe("in-memory store active time block", () => {
+  test("adds item to store if no active block", () => {
+    const userId = createUserId();
+    const timeBlock: ActiveTimeBlock = createActiveTimeBlock(userId);
+    setUserActiveTimeBlock(userId, timeBlock);
+    expect(getUserActiveTimeBlock(userId)).toEqual(timeBlock);
+  });
+});

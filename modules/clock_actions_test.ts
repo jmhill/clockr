@@ -3,13 +3,14 @@ import { expect } from "jsr:@std/expect";
 
 import { init } from "./clock_actions.ts";
 import { InMemoryStore } from "./time_block_store.ts";
+import { createUserId } from "./user.ts";
 
 const { clockIn, clockOut, getAllLoggedBlocks } = init(InMemoryStore);
 const { clearUserActiveTimeBlock, deleteAllUserLoggedTimeBlocks } =
   InMemoryStore;
 
 describe("clockIn", () => {
-  const userId = "1";
+  const userId = createUserId();
   beforeEach(() => clearUserActiveTimeBlock(userId));
 
   test("returns a new result and timeblock if no currently active block", () => {
@@ -24,12 +25,13 @@ describe("clockIn", () => {
 
     const result2 = clockIn(userId);
     expect(result2.result).toBe("existing");
+    expect(result2.timeBlock).toEqual(result1.timeBlock);
   });
 });
 
 describe("clockOut", () => {
   beforeEach(() => clearUserActiveTimeBlock(userId));
-  const userId = "1";
+  const userId = createUserId();
 
   test("returns error message if no active block for user", () => {
     const result = clockOut(userId);
@@ -59,7 +61,7 @@ describe("clockOut", () => {
 });
 
 describe("getAllTimeBlocksForUser", () => {
-  const userId = "1";
+  const userId = createUserId();
   beforeEach(() => deleteAllUserLoggedTimeBlocks(userId));
 
   test("returns null if no logged blocks for user", () => {

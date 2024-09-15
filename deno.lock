@@ -5,9 +5,12 @@
       "jsr:@std/assert@1": "jsr:@std/assert@1.0.3",
       "jsr:@std/assert@^1.0.3": "jsr:@std/assert@1.0.3",
       "jsr:@std/async": "jsr:@std/async@1.0.4",
+      "jsr:@std/bytes@^1.0.2": "jsr:@std/bytes@1.0.2",
+      "jsr:@std/crypto@^1.0.3": "jsr:@std/crypto@1.0.3",
       "jsr:@std/expect": "jsr:@std/expect@1.0.1",
       "jsr:@std/internal@^1.0.2": "jsr:@std/internal@1.0.2",
-      "jsr:@std/testing": "jsr:@std/testing@1.0.1"
+      "jsr:@std/testing": "jsr:@std/testing@1.0.1",
+      "jsr:@std/uuid": "jsr:@std/uuid@1.0.3"
     },
     "jsr": {
       "@std/assert@1.0.3": {
@@ -18,6 +21,12 @@
       },
       "@std/async@1.0.4": {
         "integrity": "373f5168a01b46ecaabc785d4e0f9ef18a010ab867af069fb905d93a9129ae5b"
+      },
+      "@std/bytes@1.0.2": {
+        "integrity": "fbdee322bbd8c599a6af186a1603b3355e59a5fb1baa139f8f4c3c9a1b3e3d57"
+      },
+      "@std/crypto@1.0.3": {
+        "integrity": "a2a32f51ddef632d299e3879cd027c630dcd4d1d9a5285d6e6788072f4e51e7f"
       },
       "@std/expect@1.0.1": {
         "integrity": "44075d9c2cb701ddfc4d5a260da2fb26ba3cfd94c45d3a0359f63cabbf85a058",
@@ -31,6 +40,13 @@
       },
       "@std/testing@1.0.1": {
         "integrity": "9c25841137ee818933e1722091bb9ed5fdc251c35e84c97979a52196bdb6c5c3"
+      },
+      "@std/uuid@1.0.3": {
+        "integrity": "843b5adb6ab387344751c4255629dba484ca4a3e998c3566d709404855cd62b7",
+        "dependencies": [
+          "jsr:@std/bytes@^1.0.2",
+          "jsr:@std/crypto@^1.0.3"
+        ]
       }
     }
   },

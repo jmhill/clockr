@@ -1,17 +1,11 @@
+import {
+  type ActiveTimeBlock,
+  createActiveTimeBlock,
+  createLoggedTimeBlock,
+  type LoggedTimeBlock,
+} from "./time_block.ts";
 import { type TimeBlockStore } from "./time_block_store.ts";
 import { type UserId } from "./user.ts";
-
-export type TimeBlockId = string;
-
-export interface ActiveTimeBlock {
-  timeBlockId: TimeBlockId;
-  userId: UserId;
-  startTime: number;
-}
-
-export interface LoggedTimeBlock extends ActiveTimeBlock {
-  endTime: number;
-}
 
 export interface ClockInResult {
   result: "new" | "existing";
@@ -47,11 +41,7 @@ const clockIn: InitClockIn =
     const currentUserActiveTimeBlock = getUserActiveTimeBlock(userId);
 
     if (currentUserActiveTimeBlock === null) {
-      const newBlock = {
-        timeBlockId: "1",
-        userId,
-        startTime: Date.now(),
-      };
+      const newBlock = createActiveTimeBlock(userId);
       setUserActiveTimeBlock(userId, newBlock);
       return { result: "new", timeBlock: newBlock } as ClockInResult;
     }
@@ -72,7 +62,7 @@ const clockOut: InitClockOut =
     }
 
     const result: ClockOutResult = {
-      timeBlock: { ...activeBlock, endTime: Date.now() },
+      timeBlock: createLoggedTimeBlock(activeBlock),
     };
     logTimeBlockEntry(result.timeBlock);
     return result;
