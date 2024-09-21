@@ -2,6 +2,7 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "jsr:@hono/hono@^4.6.2": "jsr:@hono/hono@4.6.2",
       "jsr:@std/assert@1": "jsr:@std/assert@1.0.3",
       "jsr:@std/assert@^1.0.3": "jsr:@std/assert@1.0.3",
       "jsr:@std/async": "jsr:@std/async@1.0.4",
@@ -13,6 +14,9 @@
       "jsr:@std/uuid": "jsr:@std/uuid@1.0.3"
     },
     "jsr": {
+      "@hono/hono@4.6.2": {
+        "integrity": "35fcf3be4687825080b01bed7bbe2ac66f8d8b8939f0bad459661bf3b46d916f"
+      },
       "@std/assert@1.0.3": {
         "integrity": "b0d03ce1ced880df67132eea140623010d415848df66f6aa5df76507ca7c26d8",
         "dependencies": [
@@ -53,6 +57,7 @@
   "remote": {},
   "workspace": {
     "dependencies": [
+      "jsr:@hono/hono@^4.6.2",
       "jsr:@std/assert@1"
     ]
   }
