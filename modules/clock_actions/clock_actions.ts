@@ -1,11 +1,11 @@
 import {
-  type ActiveTimeBlock,
+  ActiveTimeBlock,
   createActiveTimeBlock,
   createLoggedTimeBlock,
-  type LoggedTimeBlock,
-} from "./time_block.ts";
-import { type TimeBlockStore } from "./time_block_store.ts";
-import { type UserId } from "./user.ts";
+  LoggedTimeBlock,
+} from "../time_block/domain/time_block.ts";
+import { TimeBlockStore } from "../time_block/domain/time_block_store.ts";
+import { UserId } from "../users/user.ts";
 
 export interface ClockInResult {
   result: "new" | "existing";

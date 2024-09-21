@@ -1,4 +1,4 @@
-import { type UserId } from "../user.ts";
+import { UserId } from "../../users/user.ts";
 
 export type TimeBlockId = string;
 

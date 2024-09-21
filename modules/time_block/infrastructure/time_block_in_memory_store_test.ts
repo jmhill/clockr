@@ -1,9 +1,11 @@
 import { describe, test } from "jsr:@std/testing/bdd";
 import { expect } from "jsr:@std/expect";
-
-import { InMemoryStore } from "./time_block_store.ts";
-import { type ActiveTimeBlock, createActiveTimeBlock } from "./time_block.ts";
-import { createUserId } from "./user.ts";
+import { InMemoryStore } from "./time_block_in_memory_store.ts";
+import {
+  ActiveTimeBlock,
+  createActiveTimeBlock,
+} from "../domain/time_block.ts";
+import { createUserId } from "../../users/user.ts";
 
 const { setUserActiveTimeBlock, getUserActiveTimeBlock } = InMemoryStore;
 

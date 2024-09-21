@@ -1,3 +1,7 @@
+import { UserId } from "../../users/user.ts";
+import { ActiveTimeBlock, LoggedTimeBlock } from "../domain/time_block.ts";
+import { TimeBlockStore } from "../domain/time_block_store.ts";
+
 const activeBlocks: Map<UserId, ActiveTimeBlock> = new Map();
 const loggedBlocks: Map<UserId, LoggedTimeBlock[]> = new Map();
 
@@ -10,6 +14,8 @@ export const InMemoryStore: TimeBlockStore = {
   deleteAllUserLoggedTimeBlocks,
   logTimeBlockEntry,
 };
+
+export const init = () => InMemoryStore;
 
 function getUserActiveTimeBlock(userId: UserId): ActiveTimeBlock | null {
   const block = activeBlocks.get(userId);
