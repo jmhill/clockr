@@ -1,9 +1,13 @@
 {
   "tasks": {
-    "dev": "deno run --allow-net --watch main.ts"
+    "dev": "deno run --allow-net --watch main.tsx"
   },
   "imports": {
     "@hono/hono": "jsr:@hono/hono@^4.6.2",
     "@std/assert": "jsr:@std/assert@1"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "@hono/hono/jsx"
   }
 }
